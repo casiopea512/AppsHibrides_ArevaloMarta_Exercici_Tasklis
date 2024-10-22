@@ -1,29 +1,148 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Proyecte cordova</title>
+    <title>Proyecto cordova</title>
 
-    <!-- això es un incluude de la llibreria jqueryx3 core 3.7.1 uncompresed-->
-    <script src="https://code.jquery.com/jquery-3.7.1.js" integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/jquery-3.7.1.js"
+        integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/ui/1.14.0/jquery-ui.js"></script>
+    <script src="https://code.jquery.com/jquery-3.7.1.js"></script>
+    <script src="https://code.jquery.com/ui/1.14.0/jquery-ui.js"></script>
 
-</head>
-<body>
-    <h1>TaskList</h1>
+    <style>
+        label,
+        input {
+            display: block;
+        }
 
-    <ul>
-        <li>Exemple tasca 1</li>
-    </ul>
+        input.text {
+            margin-bottom: 12px;
+            width: 95%;
+            padding: .4em;
+        }
+
+        fieldset {
+            padding: 0;
+            border: 0;
+            margin-top: 25px;
+        }
+
+        h1 {
+            font-size: 50px;
+            margin: .6em 0;
+        }
+
+        h3{
+            background-color: blueviolet;
+            
+            margin:0;
+        }
+
+        p{
+            background-color: rgb(184, 141, 225);
+            margin:0;
+        }
+
+        div#task-contain {
+            width: 350px;
+            margin: 20px 0;
+        }
+
+        .ui-dialog .ui-state-error {
+            background-color: red;
+            border-color: rgb(189, 150, 233) solid 2px;
+            border-radius: 10px;
+        }
+    </style>
 
     <script type="text/javascript">
-        var tasca = prompt("Tasca?");
+        $(function () {
+            var dialog, form,
+                taskName = $("#taskName"),
+                taskDescription = $("#taskDescription"), // Corrigido
+                allFields = $([]).add(taskName).add(taskDescription); // Agregado taskDescription
 
-        // creem element jQuery
-        var jquery_elem = $("<li>"+tasca+"</li>");
-        // l'afegim a una llista de la nostra pàgina
-        $("ul").append(jquery_elem);
+            function addTask() {
+                // Crear nuevo encabezado y contenido para el acordeón
+                var newHeader = $("<h3>" + taskName.val() + "</h3>");
+                var newContent = $("<div><p>" + taskDescription.val() + "</p></div>");
+
+                // Añadir el nuevo encabezado y contenido al acordeón
+                $("#accordion").append(newHeader);
+                $("#accordion").append(newContent);
+
+                // Refrescar el acordeón
+                $("#accordion").accordion("refresh");
+
+                // Cerrar el diálogo
+                dialog.dialog("close");
+                return true;
+            }
+
+            dialog = $("#dialog-form").dialog({
+                autoOpen: false,
+                height: 400,
+                width: 350,
+                modal: true,
+                buttons: {
+                    "Add Task": addTask,
+                    Cancel: function () {
+                        dialog.dialog("close");
+                    }
+                },
+                close: function () {
+                    form[0].reset();
+                }
+            });
+
+            form = dialog.find("form").on("submit", function (event) {
+                event.preventDefault();
+                addTask();
+            });
+
+            $("#create-task").button().on("click", function () {
+                dialog.dialog("open");
+            });
+
+            // Inicializar el acordeón
+            $("#accordion").accordion({
+                collapsible: true
+            });
+        });
     </script>
 
+</head>
+
+<body>
+
+    <div id="dialog-form" title="Create new Task">
+        <form>
+            <fieldset>
+                <label for="taskName">Task</label>
+                <input type="text" name="taskName" id="taskName" placeholder="Comprar Macarrones"
+                    class="text ui-widget-content ui-corner-all">
+                <label for="taskDescription">Description</label>
+                <input type="text" name="taskDescription" id="taskDescription" placeholder="Del Mercadona"
+                    class="text ui-widget-content ui-corner-all">
+                <input type="submit" tabindex="-1" style="position:absolute; top:-1000px">
+            </fieldset>
+        </form>
+    </div>
+
+    <h1>TaskList</h1>
+
+    <div id="accordion">
+        <h3>Comprar Macarrones</h3>
+        <div>
+            <p>Exemple tasca 1</p>
+        </div>
+    </div>
+
+    <button id="create-task">Create new task</button>
+
 </body>
+
 </html>
