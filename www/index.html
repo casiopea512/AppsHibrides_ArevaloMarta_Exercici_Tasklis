@@ -4,24 +4,30 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self' data: https://ssl.gstatic.com 'unsafe-eval';
-    style-src 'self' 'unsafe-inline'; media-src *; img-src 'self' data: content:;">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; 
+        script-src 'self' https://code.jquery.com 'unsafe-inline' 'unsafe-eval'; 
+        style-src 'self' https://code.jquery.com 'unsafe-inline'; 
+        img-src 'self' data: content:; 
+        media-src *;">
 
+    <!-- jQuery -->
     <script src="https://code.jquery.com/jquery-3.7.1.js"
-        integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>
-    <script src="https://code.jquery.com/jquery-3.7.1.js"></script>
+        integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" 
+        crossorigin="anonymous"></script>
 
-    <script src="https://code.jquery.com/jquery-3.7.1.js"></script>
+    <!-- jQuery UI -->
     <script src="https://code.jquery.com/ui/1.14.1/jquery-ui.js"></script>
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css">
+
+    <!-- Local JavaScript -->
     <script type="text/javascript" src="js/index.js"></script>
-    
 
-    <link rel="stylesheet" href="https://code.jquery.com/ui/1.14.1/themes/base/jquery-ui.css">
-    <link rel="stylesheet" type="text/css" href="css/styles.css" />
+    <!-- Local CSS -->
+    <link rel="stylesheet" type="text/css" href="css/styles.css">
 
-    <title>TaskList - Cordova</title>
-
+    <title>TaskList Marta - Cordova</title>
 </head>
+
 
 <body>
 
@@ -44,10 +50,6 @@
     <h1>Llista de Tasques</h1>
 
     <div id="accordion">
-        <h3>Comprar Macarrones</h3>
-        <div>
-            <p>Exemple tasca 1</p>
-        </div>
     </div>
 
     <button id="create-task">Create new task</button>
