@@ -1,55 +1,57 @@
 document.addEventListener("DOMContentLoaded", function () {
-    
-    // Inicializar el acordeón
-    $("#accordion").accordion({
-        collapsible: true
-    });
-    
-    var dialog, form,
+    $("#accordion").accordion({ collapsible: true });
+
+    var dialog, editDialog, form,
         taskName = $("#taskName"),
         taskDescription = $("#taskDescription"),
-        // array de los datos
         allFields = $([]).add(taskName).add(taskDescription);
 
     function addTask() {
-        // Crear nuevo encabezado y contenido para el acordeón
         var newHeader = $("<h3>" + taskName.val() + "</h3>");
-        var newContent = $(`
-            <div>
+        var newContent = $(
+            `<div>
                 <p>${taskDescription.val()}</p>
+                <button class="edit-task">Edit</button>
                 <button class="delete-task">Delete</button>
-            </div>
-        `);
-
-        // Añadir el nuevo encabezado y contenido al acordeón
+            </div>`
+        );
         $("#accordion").append(newHeader);
         $("#accordion").append(newContent);
-
-        // Refrescar el acordeón
         $("#accordion").accordion("refresh");
-
-        // Cerrar el diálogo
         dialog.dialog("close");
         return true;
     }
 
-    // eliminar
     function deleteTask(event) {
-        // Prevenir acción predeterminada
-        // event.preventDefault();
-
-        // Encontrar el contenido y el encabezado relacionados
         var contentToDelete = $(this).parent();
         var headerToDelete = contentToDelete.prev("h3");
-
-        // Eliminar encabezado y contenido
         headerToDelete.remove();
         contentToDelete.remove();
-
-        // Refrescar el acordeón
         $("#accordion").accordion("refresh");
     }
 
+    function editTask(event) {
+        var contentToEdit = $(this).parent();
+        var headerToEdit = contentToEdit.prev("h3");
+
+        taskName.val(headerToEdit.text());
+        taskDescription.val(contentToEdit.find("p").text());
+
+        editDialog.dialog({
+            buttons: {
+                "Save Changes": function () {
+                    headerToEdit.text(taskName.val());
+                    contentToEdit.find("p").text(taskDescription.val());
+                    editDialog.dialog("close");
+                },
+                Cancel: function () {
+                    editDialog.dialog("close");
+                }
+            }
+        });
+
+        editDialog.dialog("open");
+    }
 
     dialog = $("#dialog-form").dialog({
         autoOpen: false,
@@ -64,6 +66,13 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     });
 
+    editDialog = $("#dialog-form").dialog({
+        autoOpen: false,
+        height: 400,
+        width: 350,
+        modal: true
+    });
+
     form = dialog.find("form").on("submit", function (event) {
         event.preventDefault();
         addTask();
@@ -73,8 +82,6 @@ document.addEventListener("DOMContentLoaded", function () {
         dialog.dialog("open");
     });
 
-     // Delegar el evento de clic para el botón "Delete"
     $("#accordion").on("click", ".delete-task", deleteTask);
-
-    
+    $("#accordion").on("click", ".edit-task", editTask);
 });
