@@ -1,29 +1,53 @@
-/*
- * Licensed to the Apache Software Foundation (ASF) under one
- * or more contributor license agreements.  See the NOTICE file
- * distributed with this work for additional information
- * regarding copyright ownership.  The ASF licenses this file
- * to you under the Apache License, Version 2.0 (the
- * "License"); you may not use this file except in compliance
- * with the License.  You may obtain a copy of the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing,
- * software distributed under the License is distributed on an
- * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
- * KIND, either express or implied.  See the License for the
- * specific language governing permissions and limitations
- * under the License.
- */
+document.addEventListener("DOMContentLoaded", function () {
+    // Inicializar el acordeón
+    $("#accordion").accordion({
+        collapsible: true
+    });
+    
+    var dialog, form,
+        taskName = $("#taskName"),
+        taskDescription = $("#taskDescription"),
+        // array de los datos
+        allFields = $([]).add(taskName).add(taskDescription);
 
-// Wait for the deviceready event before using any of Cordova's device APIs.
-// See https://cordova.apache.org/docs/en/latest/cordova/events/events.html#deviceready
-document.addEventListener('deviceready', onDeviceReady, false);
+    function addTask() {
+        // Crear nuevo encabezado y contenido para el acordeón
+        var newHeader = $("<h3>" + taskName.val() + "</h3>");
+        var newContent = $("<div><p>" + taskDescription.val() + "</p></div>");
 
-function onDeviceReady() {
-    // Cordova is now initialized. Have fun!
+        // Añadir el nuevo encabezado y contenido al acordeón
+        $("#accordion").append(newHeader);
+        $("#accordion").append(newContent);
 
-    console.log('Running cordova-' + cordova.platformId + '@' + cordova.version);
-    document.getElementById('deviceready').classList.add('ready');
-}
+        // Refrescar el acordeón
+        $("#accordion").accordion("refresh");
+
+        // Cerrar el diálogo
+        dialog.dialog("close");
+        return true;
+    }
+
+    dialog = $("#dialog-form").dialog({
+        autoOpen: false,
+        height: 400,
+        width: 350,
+        modal: true,
+        buttons: {
+            "Add Task": addTask,
+            Cancel: function () {
+                dialog.dialog("close");
+            }
+        }
+    });
+
+    form = dialog.find("form").on("submit", function (event) {
+        event.preventDefault();
+        addTask();
+    });
+
+    $("#create-task").button().on("click", function () {
+        dialog.dialog("open");
+    });
+
+    
+});
